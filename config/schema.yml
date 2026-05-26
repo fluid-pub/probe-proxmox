@@ -1,0 +1,145 @@
+# Entity keys match Proxmox VE API naming (no Fluid-specific aliases):
+# - cluster_resources → GET /cluster/resources
+# - qemu → rows with "type":"qemu" from cluster resources (QEMU/KVM)
+# - access_users → GET /access/users
+entities:
+  cluster_resources:
+    description: "Proxmox VE cluster resources (nodes, guests, storage, etc.)"
+    fields:
+      id:
+        type: "id"
+        description: "Resource identifier from Proxmox (e.g. node/pve, qemu/100)"
+        primary: true
+      fluid:
+        type: "id"
+        description: "SHA256 hash of the resource id for anonymization"
+      type:
+        type: "string"
+        description: "Resource kind (node, qemu, lxc, storage, ...)"
+      vmid:
+        type: "integer"
+        description: "Guest VM ID when applicable"
+      node:
+        type: "string"
+        description: "Node name hosting the resource"
+      name:
+        type: "string"
+        description: "Display name"
+      status:
+        type: "string"
+        description: "Status string from Proxmox"
+      pool:
+        type: "string"
+        description: "Resource pool if any"
+      storage:
+        type: "string"
+        description: "Storage id for storage-type rows"
+      template:
+        type: "integer"
+        description: "Template flag when present"
+      maxcpu:
+        type: "string"
+        description: "Configured CPU allocation"
+      maxdisk:
+        type: "string"
+        description: "Max disk bytes"
+      disk:
+        type: "string"
+        description: "Used disk bytes"
+      maxmem:
+        type: "string"
+        description: "Max memory bytes"
+      mem:
+        type: "string"
+        description: "Used memory bytes"
+      cpu:
+        type: "string"
+        description: "Current CPU usage ratio"
+      uptime:
+        type: "string"
+        description: "Uptime seconds when applicable"
+      running:
+        type: "integer"
+        description: "Running flag when applicable"
+      cgroup_mode:
+        type: "integer"
+        description: "Cgroup mode for LXC when present"
+
+  qemu:
+    description: "QEMU/KVM virtual machines (PVE resource type \"qemu\" in cluster/resources)"
+    fields:
+      id:
+        type: "id"
+        description: "Stable resource id (e.g. qemu/100 or node/vmid form)"
+        primary: true
+      fluid:
+        type: "id"
+        description: "SHA256 hash of id for anonymization"
+      vmid:
+        type: "integer"
+        description: "Guest VM ID"
+      node:
+        type: "string"
+        description: "Node hosting the VM"
+      name:
+        type: "string"
+        description: "VM display name"
+      status:
+        type: "string"
+        description: "Status from Proxmox"
+      pool:
+        type: "string"
+        description: "Resource pool if any"
+      template:
+        type: "integer"
+        description: "Template flag when present"
+      maxcpu:
+        type: "string"
+        description: "Configured CPUs"
+      cpu:
+        type: "string"
+        description: "CPU usage ratio"
+      maxdisk:
+        type: "string"
+        description: "Max disk bytes"
+      disk:
+        type: "string"
+        description: "Used disk bytes"
+      maxmem:
+        type: "string"
+        description: "Max memory bytes"
+      mem:
+        type: "string"
+        description: "Used memory bytes"
+      uptime:
+        type: "string"
+        description: "Uptime seconds when applicable"
+      running:
+        type: "integer"
+        description: "Running flag when present"
+
+  access_users:
+    description: "Proxmox access users (no secrets stored)"
+    fields:
+      userid:
+        type: "id"
+        description: "User id including realm (e.g. root@pam)"
+        primary: true
+      fluid:
+        type: "id"
+        description: "SHA256 hash of userid for anonymization"
+      email:
+        type: "string"
+        description: "Email when exposed by API"
+      enable:
+        type: "integer"
+        description: "Account enabled flag when present"
+      realm:
+        type: "string"
+        description: "Realm when returned separately"
+      groups:
+        type: "string"
+        description: "Group memberships (serialized in snapshot)"
+      comment:
+        type: "string"
+        description: "Comment field when present"
