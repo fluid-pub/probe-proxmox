@@ -15,7 +15,12 @@ GIT_COMMIT=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 
 LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.BuildTime=${BUILD_TIME} -X main.GitCommit=${GIT_COMMIT}"
 
-.PHONY: all build clean run dev test deps fmt help
+.PHONY: all build clean run dev test deps fmt help monorepo-replace
+
+# Use when this tree lives under the Fluid workspace (code/probes/proxmox) with probe-core at ../core.
+monorepo-replace:
+	go mod edit -replace fluid/probes/core=../core
+	@$(GO) mod tidy
 
 all: clean build
 
