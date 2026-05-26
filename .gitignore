@@ -1,0 +1,5 @@
+/build/
+/state/
+*.exe
+env.secrets
+config/probe.yml

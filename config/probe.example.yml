@@ -1,0 +1,39 @@
+# Proxmox VE probe — copy to config/probe.yml and set env vars (see env.secrets.example).
+#
+# API token privileges (read/audit only):
+# - QEMU/KVM inventory: VM.Audit (and Sys.Audit or similar on /vms)
+# - User list: User.Audit on /access or equivalent for GET /access/users
+# Never grant more than read/audit for this probe. Do not store passwords in config.
+probe:
+  name: "proxmox"
+  version: "0.1.0"
+
+proxmox:
+  api_url: "${PROXMOX_API_URL}"
+  api_token: "${PROXMOX_API_TOKEN}"
+  timeout: "30s"
+  max_retries: 3
+  tls_insecure_skip_verify: false
+
+data:
+  entities:
+    # Names mirror PVE API: qemu, access_users, cluster_resources
+    - name: qemu
+      refresh_interval: "1h"
+    - name: access_users
+      refresh_interval: "1h"
+    # Optional: full cluster/resources snapshot (nodes, storage, LXCs, ...).
+    # - name: cluster_resources
+    #   refresh_interval: "1h"
+
+state:
+  dir: "state"
+  format: "yaml"
+  cleanup_interval: 1
+
+controlplane:
+  base_url: "${FLUID_CONTROLPLANE_HTTP_BASE}"
+  api_version: "v1"
+  parameters:
+    organization_uuid: "${FLUID_CONTROLPLANE_ORGANIZATION_UUID}"
+    token: "${FLUID_CONTROLPLANE_TOKEN}"
