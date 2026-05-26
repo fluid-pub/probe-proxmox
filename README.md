@@ -34,7 +34,24 @@ Credentials and API URLs come from **your** `env.secrets` and local `config/prob
 
 `make dev` runs `go run ./cmd` with `-config config/probe.yml`. Runtime snapshots go under `state/` (gitignored).
 
-**Monorepo Fluid** (`code/probes/proxmox/`): `go.mod` may use `replace fluid/probes/core => ../core` for local work without initializing `core/`; the public repository uses `replace => ./core` with the submodule.
+**Monorepo Fluid** (`code/probes/proxmox/`): use `make monorepo-replace` so `go.mod` points at `../core` instead of the `core/` submodule. Do not commit that replace on `develop` (CI and releases use `replace => ./core`).
+
+### Git in the Fluid workspace
+
+If this directory is not yet a clone of this repository:
+
+```bash
+cd code/probes/proxmox
+git init
+git remote add origin git@github.com:fluid-pub/probe-proxmox.git
+git fetch origin
+git checkout -B develop origin/develop
+git submodule update --init --recursive   # optional if using monorepo-replace
+./scripts/install-git-hooks.sh
+make monorepo-replace
+```
+
+Keep `env.secrets` and `config/probe.yml` local (gitignored).
 
 ## Changelog
 
