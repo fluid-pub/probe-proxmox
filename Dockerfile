@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # Fluid Proxmox probe — see code/actions/templates/Dockerfile.go-workload
 
-FROM golang:1.26-bookworm AS build
+FROM golang:1.27-bookworm AS build
 
 ARG BINARY_NAME=proxmox-probe
 ARG VERSION=0.0.0
